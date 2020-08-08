@@ -1,6 +1,7 @@
 <?php
 require 'vendor/autoload.php';
 include_once('config/include.php');
+include_once('helper/email.php');
 
 //User Registration Route
 Flight::route('POST /api/signup', function() {
@@ -63,6 +64,9 @@ Flight::route('POST /api/signup', function() {
             'message' => 'User Successfully Created.. Please check your email '. $data['useremail'].' to activate your account',
             'status_code' => '201'
           ),201);
+
+          //send email for user confirmation
+          send_email($data['useremail']);
 
           // Flight::halt(201, 'User Created Successfully.. Please check your email '. $useremail.' to activate your account');
           // Flight::redirect('/api/login');

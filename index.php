@@ -31,11 +31,17 @@ Flight::route('POST /api/signup', function() {
     //Instantiate user object
     $user = new User($db);
     
+    //Registration Email already used validation
+    $useremail_already_present = $user->useremailavailibility($useremail);
+    
     try {
       //checking for valid email
       // $useremail = 'pawan88.lamba@gmailcom';
       if(!filter_var($useremail, FILTER_VALIDATE_EMAIL)){
         Flight::json(array('result' => $useremail.' is not a valid email address'),400);      
+      }
+      elseif($useremail_already_present > 0 ){
+        Flight::json(array('result' => 'The provided email has already been used'),409);
       }
       elseif($username == '' || $useremail == '' || $userpassword == '' || $userdob == ''){
         Flight::json(array('result' => 'Please specify all the fields'),400);

@@ -59,6 +59,34 @@ class User {
         }
       
     }
+
+    //Registration Email already used validation
+    public function useremailavailibility($email){
+        //check for the user input email first
+        if($email != ''){
+            // Create query
+            $query = "SELECT COUNT(*) AS num FROM `users` WHERE email = :email";
+            
+            // Prepare statement
+            $stmt = $this->conn->prepare($query);
+            
+            //Bind data
+            $stmt->bindParam(':email', $email);
+            
+            //Execute the statement.
+            $stmt->execute();
+  
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            // echo $row['num'];
+            //If num is bigger than 0, the email already exists. Set the flag here
+            if($row['num'] > 0){
+                return 1;
+            } else{
+                return 0;
+            }
+        }
+  
+      }
     
   }
 

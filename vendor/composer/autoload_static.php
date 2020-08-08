@@ -11,9 +11,25 @@ class ComposerStaticInit05c5fb1d8ef78bb82f0c4697bc41302e
         '5b7d984aab5ae919d3362ad9588977eb' => __DIR__ . '/..' . '/mikecao/flight/flight/Flight.php',
     );
 
+    public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'PHPMailer\\PHPMailer\\' => 20,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit05c5fb1d8ef78bb82f0c4697bc41302e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit05c5fb1d8ef78bb82f0c4697bc41302e::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }

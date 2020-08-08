@@ -36,10 +36,11 @@ function send_email($email){
         $mail->addAddress($email);     // Add a recipient
         // $mail->addAddress('pawantesting8@gmail.com');
 
+        $emailURL = "http://".$_SERVER['HTTP_HOST']."/user_management_rest/api/email_activation/".$email;
         // Content
         $mail->isHTML(true);                                  // Set email format to HTML
         $mail->Subject = 'Confirm your Email - User Management API';
-        $mail->Body    = 'Click on the confirmation Link <b>email link</b> to activate your account';
+        $mail->Body    = 'Click on the confirmation Link <b>'.$emailURL.'</b> to activate your account';
         $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
         $mail->send();

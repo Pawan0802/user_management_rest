@@ -80,5 +80,25 @@ Flight::route('POST /api/signup', function() {
 });
 
 
+//email activation route
+Flight::route('GET|PUT /api/email_activation/@email', function($email) {
+    // Instantiate DB & connect 
+    $database = new Database();
+    $db= $database->connect();
+  
+    //Instantiate user object
+    $user = new User($db);
+    
+    //Calling the activation function
+    $useremail_activated = $user->activateemail($email);
+    if($useremail_activated) {
+      Flight::json(array(
+        'message' => 'Account activated for email - '. $email,
+        'status_code' => '200'
+      ),200);
+    }
+  });
+
+
 Flight::start();
 ?>

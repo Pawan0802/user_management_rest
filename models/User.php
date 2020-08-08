@@ -79,14 +79,41 @@ class User {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             // echo $row['num'];
             //If num is bigger than 0, the email already exists. Set the flag here
-            if($row['num'] > 0){
-                return 1;
-            } else{
-                return 0;
-            }
+            // if($row['num'] > 0){
+            //     return 1;
+            // } else{
+            //     return 0;
+            // }
+            $count = $row['num'] ?? 0;
+            return $count;
         }
   
-      }
+    }
+
+    //invoking this function and activating the user when the user clicks on the link sent in an email
+    function activateemail($email){
+        try {
+          // Create query
+          $query = "UPDATE " . $this->table . " SET active_status = :status WHERE email = :email";
+  
+          // Prepare statement
+          $stmt = $this->conn->prepare($query);
+  
+          //data
+          $data = [
+            'status' => 'Yes',
+            'email' => $email
+          ];
+  
+          // Execute query
+          if($stmt->execute($data)) {
+          return true;
+          }
+        } catch (\Throwable $th) {
+          //throw $th;
+        }
+  
+    }
     
   }
 

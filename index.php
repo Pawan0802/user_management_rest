@@ -88,7 +88,7 @@ Flight::route('GET|PUT /api/email_activation/@email', function($email) {
   
     //Instantiate user object
     $user = new User($db);
-    
+
     //Calling the activation function
     $useremail_activated = $user->activateemail($email);
     if($useremail_activated) {
@@ -98,6 +98,54 @@ Flight::route('GET|PUT /api/email_activation/@email', function($email) {
       ),200);
     }
   });
+
+
+//User Login Route
+Flight::route('POST /api/login', function() {   
+    // Instantiate DB & connect 
+    $database = new Database();
+    $db= $database->connect();
+
+    //Instantiate user object
+    $user = new User($db);
+
+
+    $data = Flight::request()->data;  // we only want the data sent to this request so we access it's 'data' member variable
+    $useremail = $data['useremail'];
+    $userpassword = $data['userpassword'];
+    $res = $user->login($useremail,$userpassword);
+    
+    try {
+      
+      if($res == 1){
+        Flight::json(array('result' => 'Wrong Credentials Email - '.$useremail.' is not matching with our records'),401);      
+      }
+      elseif($res == 2){
+        Flight::json(array('result' => 'Wrong Credentials Password - '.$userpassword.' is not matching with our records'),401);      
+      }
+      /**
+           * Since api is not live, so purposely commenting it for now.
+           * But it is working in my local machine
+           */
+      // elseif($res == 'User Inactive'){
+      //   Flight::json(array('result' => 'User still inactive. Check your email.'),401);      
+      // }
+      else{
+          Flight::json(array(
+            'login_details' => array(
+              "email" => $useremail,
+              "password" => $userpassword,
+            ),
+            'message' => 'Successful login. Use the token for subsequent requests in the API',
+            'status_code' => '200'
+          ),200);   
+      }
+      
+    } catch (\Throwable $th) {
+      //throw $th;
+    }
+
+});
 
 
 Flight::start();

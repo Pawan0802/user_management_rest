@@ -114,6 +114,52 @@ class User {
         }
   
     }
+
+    // Login User
+    public function login($useremail,$userpassword){
+        try {
+           
+            //Create Query
+            $query = "SELECT * FROM ". $this->table ." WHERE email=:email LIMIT 1";
+            
+            // Prepare statement
+            $stmt = $this->conn->prepare($query);
+            
+            $stmt->execute(array(':email'=>$useremail));
+            $userRow=$stmt->fetch(PDO::FETCH_ASSOC);
+            print_r($userRow);
+            // if($stmt->rowCount() > 0)
+            if(empty($userRow)){
+                // echo "email not matching";
+                return 1;
+            }
+            /**
+             * Since api is not live, so purposely commenting it for now.
+             * But it is working in my local machine
+             */
+            // elseif($userRow['active_status'] != 'Yes'){
+            //     return "User Inactive";
+            // }
+            else
+            {
+               if(password_verify($userpassword, $userRow['password']))
+               {
+                  return 3;
+                      
+               }
+               else
+               {
+                  // echo "password not matching";
+                  return 2;
+                  // return false;
+               }
+            }
+            
+        } catch (\Throwable $th) {
+          //throw $th;
+        }
+  
+    }
     
   }
 

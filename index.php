@@ -273,5 +273,12 @@ Flight::route('GET /api/logout', function() {
 // Creating views for front endpoint ends here
 
 
+//If the url not matched
+Flight::map('notFound', function(){
+    // Handle not found
+    Flight::response()->status(404);
+    echo 'The page you requested could not be found';
+});
+
 Flight::start();
 ?>

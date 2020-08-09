@@ -1,4 +1,9 @@
 <?php
+$sitePath = $_SERVER['DOCUMENT_ROOT']."/user_management_rest/";
+require_once($sitePath.'vendor/autoload.php');
+// require "../vendor/autoload.php";
+use \Firebase\JWT\JWT;
+
 class User {
     // DB stuff
     private $conn;
@@ -144,8 +149,28 @@ class User {
             {
                if(password_verify($userpassword, $userRow['password']))
                {
-                  return 3;
-                      
+
+                // API - Generate token so that it will be send for subsequent requests
+                $secret_key = "bin2hex(random_bytes(32))";
+                $issuer_claim = "user_management_rest"; // this can be the servername
+                $audience_claim = "dance_audience";
+                $issuedat_claim = time(); // issued at
+                $notbefore_claim = $issuedat_claim + 10; //not before in seconds
+                $expire_claim = $issuedat_claim + 3600; // expire time in seconds
+                $token = array(
+                    "iss" => $issuer_claim,
+                    "aud" => $audience_claim,
+                    "iat" => $issuedat_claim,
+                    "nbf" => $notbefore_claim,
+                    "exp" => $expire_claim,
+                    "data" => array(
+                        "useremail" => $useremail,
+                        "userpassword" => $userpassword
+                ));
+                  //print_r($token);
+                  // http_response_code(200);
+                $jwt = JWT::encode($token, $secret_key);
+                return $jwt;       
                }
                else
                {

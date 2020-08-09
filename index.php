@@ -135,6 +135,7 @@ Flight::route('POST /api/login', function() {
             'login_details' => array(
               "email" => $useremail,
               "password" => $userpassword,
+              "token" => $res
             ),
             'message' => 'Successful login. Use the token for subsequent requests in the API',
             'status_code' => '200'

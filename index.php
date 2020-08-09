@@ -2,6 +2,7 @@
 require 'vendor/autoload.php';
 include_once('config/include.php');
 include_once('helper/email.php');
+include_once('jwt/protected.php');
 
 //User Registration Route
 Flight::route('POST /api/signup', function() {
@@ -166,6 +167,7 @@ Flight::route('PUT /api/user/@id', function($id) {
     $userpassword = $data['userpassword'];
     $userdob = $data['userdob'];
     
+    
     try {
       if($username == '' || $userpassword == '' || $userdob == ''){
         Flight::json(array('result' => 'Please specify all the fields'),400);
@@ -177,10 +179,16 @@ Flight::route('PUT /api/user/@id', function($id) {
              //check user info first
             $res = $user->edit($id);
 
-            //If entry not found in db, show not allowed
+            //check token then only can update
+            $token_result =  verify_jwt_token();
+
+            //If entry not found in db for that user, show not allowed
             if($res == 0){
                 Flight::json(array('result' => 'Not allowed to update'),401);
             }
+            elseif($token_result == 0 || $token_result == ''){
+                Flight::json(array('message' => 'Access denied. Please provide with proper token'),401);
+              }
             else{
                 //updating the table
                  $res = $user->update($username,$userpassword,$userdob,$id);

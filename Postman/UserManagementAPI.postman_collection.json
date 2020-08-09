@@ -1,0 +1,114 @@
+{
+	"info": {
+		"_postman_id": "9226fe17-4bf3-42e0-a631-18d3771ef079",
+		"name": "UserManagementAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost/user_management_rest/api/signup",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"your username\",\r\n    \"useremail\": \"your email address\",\r\n    \"userpassword\": \"your password\",\r\n    \"userdob\": \"1990-04-08\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/user_management_rest/api/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"user_management_rest",
+						"api",
+						"signup"
+					]
+				},
+				"description": "Registration Endpoint"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost/user_management_rest/api/login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"useremail\": \"your email address\",\r\n    \"userpassword\": \"your password\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/user_management_rest/api/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"user_management_rest",
+						"api",
+						"login"
+					]
+				},
+				"description": "Login Endpoint"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost/user_management_rest/api/user/16",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Paste token here",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \" update your username\",\r\n    \"userpassword\": \"update your password\",\r\n    \"userdob\": \"1990-04-08\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/user_management_rest/api/user/16",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"user_management_rest",
+						"api",
+						"user",
+						"16"
+					]
+				},
+				"description": "Update Endpoint"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

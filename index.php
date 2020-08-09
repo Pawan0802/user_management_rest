@@ -147,6 +147,60 @@ Flight::route('POST /api/login', function() {
 
 });
 
+//User Update Info Route
+Flight::route('PUT /api/user/@id', function($id) {
+    //show response status in json
+    // echo 'updating user with id: ' . $id;
+
+    // Instantiate DB & connect 
+    $database = new Database();
+    $db= $database->connect();
+
+    //Instantiate user object
+    $user = new User($db);
+
+    $data = Flight::request()->data;  // we only want the data sent to this request so we access it's 'data' member variable
+    // print_r($data);
+    $username = $data['username'];
+    $userpassword = $data['userpassword'];
+    $userdob = $data['userdob'];
+    
+    try {
+      if($username == '' || $userpassword == '' || $userdob == ''){
+        Flight::json(array('result' => 'Please specify all the fields'),400);
+      }
+      elseif($data['useremail'] != ''){
+        Flight::json(array('result' => 'User is not allowed to update email field'),409);
+      }
+      else{ 
+             //check user info first
+            $res = $user->edit($id);
+
+            //If entry not found in db, show not allowed
+            if($res == 0){
+                Flight::json(array('result' => 'Not allowed to update'),401);
+            }
+            else{
+                //updating the table
+                 $res = $user->update($username,$userpassword,$userdob,$id);
+                 Flight::json(array(
+                    'user_details' => array(
+                    "name" => $username,
+                    "password" => $userpassword,
+                    "DOB" => $userdob
+                    ),
+                    'message' => 'Details Successfully updated.',
+                    'status_code' => '200'
+                ),200);
+            }
+        }
+
+    } catch (\Throwable $th) {
+      //throw $th;
+    }
+
+});
+
 
 Flight::start();
 ?>

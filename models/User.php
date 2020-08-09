@@ -127,7 +127,7 @@ class User {
             
             $stmt->execute(array(':email'=>$useremail));
             $userRow=$stmt->fetch(PDO::FETCH_ASSOC);
-            print_r($userRow);
+            // print_r($userRow);
             // if($stmt->rowCount() > 0)
             if(empty($userRow)){
                 // echo "email not matching";
@@ -159,6 +159,75 @@ class User {
           //throw $th;
         }
   
+    }
+
+    //user info
+    public function edit($user_id) {
+        try {
+  
+            // Create query
+            $query = "SELECT * FROM ". $this->table ." WHERE id=:user_id LIMIT 1";
+            
+            // Prepare statement
+            $stmt = $this->conn->prepare($query);
+            
+            $stmt->execute(array(':user_id'=>$user_id));
+            $userRow=$stmt->fetch(PDO::FETCH_ASSOC);
+            // print_r($userRow);
+  
+            if(!empty($userRow)){
+              return $userRow;
+            }else{
+              return false;
+            }
+  
+            // Print error if something goes wrong
+            // printf("Error: %s.\n", $stmt->error);
+            // return false;
+        } catch (\Throwable $th) {
+          //throw $th;
+        }
+            
+    }
+
+    // Update User
+    public function update($username,$userpassword,$userdob,$id) {
+        try {
+          $hash_password = password_hash($userpassword, PASSWORD_DEFAULT);
+          // Create query
+          $query = 'UPDATE ' . $this->table . ' SET name = :name, password = :password, dob = :dob
+                    WHERE id = :id';
+  
+          // Prepare statement
+          $stmt = $this->conn->prepare($query);
+  
+          //data
+          $data = [
+          'name' => $username,
+          'password' => $hash_password,
+          'dob' => $userdob,
+          'id' => $id,
+          ];
+          
+          // Execute query
+          $stmt->execute($data);
+          
+        
+          if($stmt->rowCount()){
+            return true;
+          }else{
+            return false;
+          }
+
+          
+  
+          // Print error if something goes wrong
+          // printf("Error: %s.\n", $stmt->error);
+          // return false;
+        } catch (\Throwable $th) {
+          //throw $th;
+        }
+            
     }
     
   }

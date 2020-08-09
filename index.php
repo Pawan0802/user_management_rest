@@ -4,6 +4,9 @@ include_once('config/include.php');
 include_once('helper/email.php');
 include_once('jwt/protected.php');
 
+
+// All interactions with rest API starts here
+
 //User Registration Route
 Flight::route('POST /api/signup', function() {
     
@@ -167,7 +170,7 @@ Flight::route('PUT /api/user/@id', function($id) {
     $userpassword = $data['userpassword'];
     $userdob = $data['userdob'];
     
-    
+
     try {
       if($username == '' || $userpassword == '' || $userdob == ''){
         Flight::json(array('result' => 'Please specify all the fields'),400);
@@ -209,6 +212,65 @@ Flight::route('PUT /api/user/@id', function($id) {
     }
 
 });
+
+Flight::map('notFound', function(){
+    // Handle not found
+    Flight::response()->status(404);
+    echo 'The page you requested could not be found';
+});
+
+//All interactions with rest API ends here
+
+
+
+// Creating views for front endpoint starts here
+Flight::route('/', function(){
+    Flight::render('header', array(), 'header_content');
+    Flight::render('signup', array('title' => 'Sign Up - User Management API'));
+    Flight::redirect('/api/signup',302);
+});
+
+// Sign Up
+Flight::route('GET /api/signup', function() {
+    Flight::render('header', array(), 'header_content');
+    Flight::render('signup', array('title' => 'Sign Up - User Management API'));
+});
+
+// Login
+Flight::route('GET /api/login', function() {
+    Flight::render('header', array(), 'header_content');
+    Flight::render('login', array('title' => 'Log In - User Management API'));
+});
+
+//Edit Page
+Flight::route('GET /api/user/', function() {
+    // print_r($_SESSION);
+  
+    if(empty($_SESSION['user_id'])){
+      Flight::redirect('/api/signup',302);
+    } else{
+    // Instantiate DB & connect 
+    $database = new Database();
+    $db= $database->connect();
+  
+    //Instantiate user object
+    $user = new User($db);
+    $user_info = $user->edit($_SESSION['user_id']);
+    //print_r($user_info);
+  
+    Flight::render('header', array('user_info'=> $user_info), 'header_content');
+    Flight::render('user_dashboard', array('title' => 'Edit Info - User Management API'));
+  }
+  });
+
+//logout
+Flight::route('GET /api/logout', function() {
+    //destroy the session
+    session_unset();
+    session_destroy();
+    Flight::redirect('/api/login',200);
+  });
+// Creating views for front endpoint ends here
 
 
 Flight::start();

@@ -149,6 +149,10 @@ class User {
             {
                if(password_verify($userpassword, $userRow['password']))
                {
+                   
+                // Front end - Sessions
+                // echo "Successfully Login";
+                $_SESSION['user_id'] = $userRow['id'];
 
                 // API - Generate token so that it will be send for subsequent requests
                 $secret_key = "bin2hex(random_bytes(32))";
